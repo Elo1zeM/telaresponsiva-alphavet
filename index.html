@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clínica Veterinária Alpha Vet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <link rel='manifest' href="manifest.json">
+    <meta name="theme-color" content="#1b4414">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel='apple-touch-icon' href="./assets/img/logopwa.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { montserrat: ['Montserrat', 'sans-serif'] },
+                    colors: { primary: '#1b4414', dark: '#122a0d' }
+                }
+            }
+        }
+    </script>
+    <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .btn-grad { background: linear-gradient(135deg, #1b4414 0%, #2d6a24 100%); }
+    </style>
+</head>
+
+<body class="font-montserrat text-gray-800 bg-[#f8faf7]">
+
+    <nav class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex justify-between items-center">
+            <span class="font-extrabold text-primary text-xl uppercase tracking-tighter">Alpha Vet</span>
+            <div class="space-x-6 font-bold text-[10px]">
+                <a href="#home" class="text-primary border-b-2 border-primary">HOME</a>
+                <a href="#servicos" class="text-gray-400 hover:text-primary transition">SERVIÇOS</a>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="py-12 px-6 max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10">
+        <div class="md:w-1/2 text-left">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-dark leading-tight">
+                Cuidado especializado para quem você <span class="text-primary italic">ama.</span>
+            </h1>
+            <p class="mt-4 text-gray-600 text-lg">Produtos e serviços com padrão Alpha Vet.</p>
+            <a href="#servicos" class="inline-block mt-8 px-10 py-4 btn-grad text-white rounded-2xl font-bold shadow-lg hover:scale-105 transition-all">VER CATÁLOGO</a>
+        </div>
+        <div class="md:w-1/2 flex justify-center">
+            <img src="./assets/img/logo.png" alt="AlphaVet" class="w-full max-w-sm drop-shadow-2xl" onerror="this.src='https://via.placeholder.com/300?text=Alpha+Vet'">
+        </div>
+    </section>
+
+    <section id="servicos" class="max-w-6xl mx-auto p-6 md:p-12 bg-white rounded-[40px] shadow-sm mb-20">
+        <h2 class="text-3xl font-extrabold text-center mb-8">Nossos Serviços e Produtos</h2>
+        <nav id="nav-categoria" class="overflow-x-auto flex gap-2 pb-6 mb-8 border-b border-gray-100 no-scrollbar"></nav>
+        <div id="produtos-container">
+            <div id="categoria-titulo" class="text-left text-dark font-extrabold text-2xl mb-8 border-l-8 border-primary pl-4 uppercase">Carregando...</div>
+            <div id="lista-produtos" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+        </div>
+    </section>
+
+    <footer class="bg-dark text-white text-center p-12">
+        <p class="font-bold uppercase tracking-widest text-[10px] opacity-70">Alpha Vet 🐾 2025</p>
+    </footer>
+
+    <div id="detalhes-modal" class="fixed inset-0 bg-black/70 z-[100] flex justify-center items-center opacity-0 pointer-events-none transition-all px-4 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-[400px] rounded-[35px] overflow-hidden transform scale-95 transition-all">
+            <div class="relative h-64 bg-gray-50 p-10 flex justify-center items-center">
+                <button onclick="fecharModalDetalhes()" class="absolute top-5 right-5 bg-white w-10 h-10 rounded-full font-bold shadow-md">&times;</button>
+                <img id="detalhes-img" src="" class="max-h-full object-contain">
+            </div>
+            <div class="p-8">
+                <h2 id="detalhes-nome" class="text-2xl font-extrabold text-dark"></h2>
+                <p id="detalhes-preco" class="text-2xl font-extrabold text-primary mt-2"></p>
+                <div id="detalhes-desc" class="bg-gray-50 rounded-2xl p-4 mt-4 text-gray-500 text-sm italic"></div>
+                <button id="detalhes-btn-add" class="w-full btn-grad text-white py-4 rounded-2xl text-lg font-bold mt-8">Adicionar ao Pedido</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="carrinho-footer" class="fixed bottom-0 left-0 w-full bg-primary text-white p-4 z-[90] shadow-2xl transform translate-y-full transition-transform flex justify-between items-center cursor-pointer" onclick="abrirModalCarrinho()">
+        <div class="pl-4"><p class="text-xs opacity-70 font-bold uppercase">Total</p><p id="carrinho-total" class="text-xl font-black">R$ 0,00</p></div>
+        <button class="bg-white text-primary px-8 py-2 rounded-xl font-bold mr-4">REVISAR</button>
+    </div>
+
+    <div id="carrinho-modal" class="fixed inset-0 bg-black/60 z-[110] flex flex-col justify-end items-center opacity-0 pointer-events-none transition-all">
+        <div id="carrinho-modal-content" class="bg-white w-full max-w-[500px] max-h-[85vh] rounded-t-[40px] flex flex-col transform translate-y-full transition-all">
+            <div class="p-6 border-b flex justify-between items-center">
+                <h2 class="text-xl font-extrabold uppercase">Meu Pedido</h2>
+                <button onclick="fecharModalCarrinho()" class="text-3xl">&times;</button>
+            </div>
+            <div id="carrinho-itens-container" class="p-6 flex-1 overflow-y-auto flex flex-col gap-3"></div>
+            <div class="p-8 border-t bg-gray-50">
+                <div class="flex justify-between items-center mb-6">
+                    <span class="text-gray-400 font-bold">TOTAL:</span>
+                    <span id="modal-carrinho-total" class="text-3xl font-extrabold text-primary">R$ 0,00</span>
+                </div>
+                <button onclick="finalizarPedido()" class="w-full btn-grad text-white py-4 rounded-2xl text-lg font-bold">Finalizar no WhatsApp</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://17-3-aula7-alpha-k2wz.vercel.app/api';
+        let carrinho = [];
+        let categoriaData = [];
+
+        async function carregarCategoria() {
+            try {
+                const res = await fetch(`${API_URL}/categorias`);
+                categoriaData = await res.json();
+                renderizarBotoes();
+                if (categoriaData.length > 0) selecionarCategoria(categoriaData[0].id, categoriaData[0].nome);
+            } catch (e) { console.error("Erro categorias", e); }
+        }
+
+        function renderizarBotoes() {
+            const nav = document.getElementById('nav-categoria');
+            nav.innerHTML = '';
+            categoriaData.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = "px-6 py-2 rounded-full font-bold text-xs bg-gray-100 text-dark transition-all btn-cat flex-shrink-0";
+                btn.innerText = cat.nome;
+                btn.onclick = () => selecionarCategoria(cat.id, cat.nome);
+                btn.dataset.id = cat.id;
+                nav.appendChild(btn);
+            });
+        }
+
+        async function selecionarCategoria(id, nome) {
+    document.getElementById('categoria-titulo').innerText = nome;
+    
+    // Seleciona todos os botões de categoria
+    document.querySelectorAll('.btn-cat').forEach(btn => {
+        if (btn.dataset.id == id) {
+            // ESTILO QUANDO ATIVO: Verde escuro com texto branco
+            btn.classList.add('bg-primary', 'text-white');
+            btn.classList.remove('bg-gray-100', 'text-dark');
+        } else {
+            // ESTILO QUANDO INATIVO: Cinza claro com texto escuro
+            btn.classList.remove('bg-primary', 'text-white');
+            btn.classList.add('bg-gray-100', 'text-dark');
+        }
+    });
+    
+    carregarProdutos(id);
+}
+
+        async function carregarProdutos(categoriaId) {
+            const lista = document.getElementById('lista-produtos');
+            lista.innerHTML = '<p class="col-span-full text-center py-10">Buscando...</p>';
+            try {
+                const res = await fetch(`${API_URL}/produtos`);
+                const todos = await res.json();
+                const filtrados = todos.filter(p => (p.categoria_id || p.categoriaid || p.categoriaId) == categoriaId);
+                renderizarProdutos(filtrados);
+            } catch (e) { lista.innerHTML = 'Erro ao carregar.'; }
+        }
+
+        function renderizarProdutos(produtos) {
+            const lista = document.getElementById('lista-produtos');
+            lista.innerHTML = produtos.length ? '' : '<p class="col-span-full text-center py-10">Nenhum item encontrado.</p>';
+            produtos.forEach(p => {
+                const img = p.imagem && p.imagem.startsWith('http') ? p.imagem : `./assets/img/${p.imagem || 'logo.png'}`;
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-[30px] p-4 shadow-sm border border-gray-50 flex flex-col hover:shadow-md transition-all";
+                card.innerHTML = `
+                    <div class="h-32 flex justify-center items-center mb-4 cursor-pointer" onclick="abrirModalDetalhes('${p.nome}', ${p.preco}, '${(p.descricao || '').replace(/'/g, "")}', '${img}', '${p.id}')">
+                        <img src="${img}" class="max-h-full max-w-full object-contain" onerror="this.src='./assets/img/logo.png'">
+                    </div>
+                    <h4 class="font-bold text-dark text-[10px] uppercase h-8 overflow-hidden">${p.nome}</h4>
+                    <p class="text-primary font-extrabold text-lg">R$ ${p.preco.toFixed(2).replace('.', ',')}</p>
+                    <button onclick="adicionarItem('${p.id}','${p.nome}', ${p.preco})" class="w-full bg-primary text-white py-3 rounded-xl text-[10px] font-bold mt-4">ADICIONAR</button>
+                `;
+                lista.appendChild(card);
+            });
+        }
+
+        function adicionarItem(id, nome, preco) {
+            const i = carrinho.findIndex(item => item.id === id);
+            if (i !== -1) carrinho[i].quantidade++;
+            else carrinho.push({ id, nome, preco, quantidade: 1 });
+            atualizarCarrinho();
+        }
+
+        function atualizarCarrinho() {
+            const total = carrinho.reduce((acc, i) => acc + (i.preco * i.quantidade), 0);
+            const totalFormatado = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('carrinho-total').innerText = totalFormatado;
+            document.getElementById('modal-carrinho-total').innerText = totalFormatado;
+            document.getElementById('carrinho-footer').classList.toggle('translate-y-full', carrinho.length === 0);
+            renderizarListaCarrinho();
+        }
+
+        function renderizarListaCarrinho() {
+            const c = document.getElementById('carrinho-itens-container');
+            c.innerHTML = '';
+            carrinho.forEach(i => {
+                const d = document.createElement('div');
+                d.className = "flex justify-between items-center bg-gray-50 p-4 rounded-2xl";
+                d.innerHTML = `<p class="font-bold text-[10px] uppercase">${i.nome}</p>
+                    <div class="flex items-center gap-3">
+                        <button onclick="qtd('${i.id}', -1)" class="w-6 h-6 bg-white rounded shadow">-</button>
+                        <span class="font-bold text-sm">${i.quantidade}</span>
+                        <button onclick="qtd('${i.id}', 1)" class="w-6 h-6 bg-white rounded shadow">+</button>
+                    </div>`;
+                c.appendChild(d);
+            });
+        }
+
+        function qtd(id, n) {
+            const i = carrinho.findIndex(item => item.id === id);
+            if (i !== -1) {
+                carrinho[i].quantidade += n;
+                if (carrinho[i].quantidade <= 0) carrinho.splice(i, 1);
+                atualizarCarrinho();
+            }
+        }
+
+        function abrirModalDetalhes(n, p, d, i, id) {
+            document.getElementById('detalhes-nome').innerText = n;
+            document.getElementById('detalhes-preco').innerText = `R$ ${p.toFixed(2).replace('.', ',')}`;
+            document.getElementById('detalhes-desc').innerText = d || "Sem descrição.";
+            document.getElementById('detalhes-img').src = i;
+            document.getElementById('detalhes-btn-add').onclick = () => { adicionarItem(id, n, p); fecharModalDetalhes(); };
+            document.getElementById('detalhes-modal').classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function fecharModalDetalhes() { document.getElementById('detalhes-modal').classList.add('opacity-0', 'pointer-events-none'); }
+        function abrirModalCarrinho() { 
+            document.getElementById('carrinho-modal').classList.remove('opacity-0', 'pointer-events-none');
+            document.getElementById('carrinho-modal-content').classList.remove('translate-y-full');
+        }
+        function fecharModalCarrinho() { 
+            document.getElementById('carrinho-modal-content').classList.add('translate-y-full');
+            setTimeout(() => document.getElementById('carrinho-modal').classList.add('opacity-0', 'pointer-events-none'), 300);
+        }
+
+        function finalizarPedido() {
+            let m = "*NOVO PEDIDO ALPHA VET*\n\n";
+            carrinho.forEach(i => m += `• ${i.quantidade}x ${i.nome}\n`);
+            m += `\n*TOTAL: ${document.getElementById('modal-carrinho-total').innerText}*`;
+            window.open(`https://wa.me/5515991601414?text=${encodeURIComponent(m)}`, '_blank');
+        }
+
+        carregarCategoria();
+    </script>
+</body>
+</html>

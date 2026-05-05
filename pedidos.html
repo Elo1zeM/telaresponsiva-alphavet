@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Pedidos - Alpha Vet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { montserrat: ['Montserrat', 'sans-serif'] },
+                    colors: {
+                        primary: '#1b4414',
+                        accent: '#2d6a24',
+                        dark: '#122a0d'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="font-montserrat text-gray-800 bg-[#f8faf7]">
+
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 h-24 flex justify-between items-center">
+            
+            <a href="#" class="flex items-center gap-4">
+                <img src="./assets/img/logo.png" alt="Alpha Vet" class="h-40 w-auto object-contain" onerror="this.src='https://via.placeholder.com/150x50?text=Alpha+Vet'">
+                
+                <div class="flex flex-col justify-center">
+                    <span class="text-primary font-extrabold text-2xl leading-none uppercase tracking-tighter">
+                        Alpha Vet
+                    </span>
+                    <span class="text-[10px] text-gray-400 font-bold uppercase tracking-widest leading-tight">
+                        Clínica Veterinária
+                    </span>
+                </div>
+            </a>
+
+            <div class="hidden md:flex items-center space-x-6">
+                <button onclick="location.reload()" class="text-sm font-bold text-primary hover:bg-primary/10 px-4 py-2 rounded-xl transition">Atualizar Painel</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto p-6 md:p-10">
+        <div class="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
+            <h1 class="text-2xl md:text-3xl font-extrabold text-dark tracking-tight">Pedidos Recebidos</h1>
+            <span id="contadorPedidos" class="bg-primary text-white text-xs font-bold px-5 py-2 rounded-full shadow-lg">
+                0 pedidos
+            </span>
+        </div>
+
+        <div id="containerPedidos" class="grid gap-6">
+            <div id="erroBox" class="border border-primary/20 bg-white p-8 rounded-[35px] shadow-sm flex flex-col items-center text-center gap-4">
+                <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+                    <span class="text-2xl text-primary">🐾</span>
+                </div>
+                <div>
+                    <p class="font-extrabold text-dark text-lg mb-1">Buscando novos pedidos...</p>
+                    <p class="text-sm text-gray-500 max-w-xs">Se a lista não carregar em instantes, verifique a conexão com o banco de dados.</p>
+                </div>
+                <button onclick="location.reload()" class="mt-2 text-xs font-bold text-primary underline">Tentar novamente</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Lógica para carregar os pedidos da API pode ser adicionada aqui
+    </script>
+</body>
+</html>

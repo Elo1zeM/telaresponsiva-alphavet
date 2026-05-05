@@ -1,0 +1,17 @@
+{
+    "name": "Alpha Vet - Clínica Veterinária",
+    "short_name": "Alpha Vet",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#1b4414",
+    "description": "Produtos e Serviços digitais da Alpha Vet",
+    "icons": [
+    {
+        "src": "./assets/img/logopwa.png",
+        "sizes": "192x192",
+        "type": "image.png",
+        "purpose": "any"
+    }
+]
+}
