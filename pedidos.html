@@ -1,21 +1,29 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Painel de Pedidos - Alpha Vet</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+
     <script src="https://cdn.tailwindcss.com"></script>
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { montserrat: ['Montserrat', 'sans-serif'] },
+                    fontFamily: {
+                        montserrat: ['Montserrat', 'sans-serif']
+                    },
                     colors: {
-                        primary: '#1b4414',
-                        accent: '#2d6a24',
-                        dark: '#122a0d'
+                        primary: '#1b5e20',
+                        secondary: '#2e7d32',
+                        dark: '#103417',
+                        light: '#f4faf4',
+                        muted: '#6b7280'
                     }
                 }
             }
@@ -23,54 +31,408 @@
     </script>
 </head>
 
-<body class="font-montserrat text-gray-800 bg-[#f8faf7]">
+<body class="bg-light font-montserrat text-gray-800">
 
-    <nav class="bg-white shadow-md sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 h-24 flex justify-between items-center">
-            
+    <!-- NAVBAR -->
+    <nav class="bg-white shadow-md sticky top-0 z-50 border-b border-green-100">
+        <div class="max-w-7xl mx-auto px-6 h-24 flex justify-between items-center">
+
+            <!-- LOGO -->
             <a href="#" class="flex items-center gap-4">
-                <img src="./assets/img/logo.png" alt="Alpha Vet" class="h-40 w-auto object-contain" onerror="this.src='https://via.placeholder.com/150x50?text=Alpha+Vet'">
-                
-                <div class="flex flex-col justify-center">
-                    <span class="text-primary font-extrabold text-2xl leading-none uppercase tracking-tighter">
+
+                <img src="./assets/img/logo.png" alt="Alpha Vet"
+                    class="h-20 w-auto object-contain"
+                    onerror="this.src='https://via.placeholder.com/180x80?text=Alpha+Vet'">
+
+                <div class="flex flex-col">
+                    <span class="text-primary text-3xl font-extrabold uppercase tracking-tight">
                         Alpha Vet
                     </span>
-                    <span class="text-[10px] text-gray-400 font-bold uppercase tracking-widest leading-tight">
+
+                    <span class="text-[11px] text-gray-400 uppercase tracking-[0.25em] font-bold">
                         Clínica Veterinária
                     </span>
                 </div>
             </a>
 
-            <div class="hidden md:flex items-center space-x-6">
-                <button onclick="location.reload()" class="text-sm font-bold text-primary hover:bg-primary/10 px-4 py-2 rounded-xl transition">Atualizar Painel</button>
+            <!-- STATUS -->
+            <div id="status-conexao"
+                class="hidden md:flex items-center gap-2 text-sm font-bold text-green-600">
+                <span class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span>
+                Online
             </div>
+
         </div>
     </nav>
 
-    <main class="max-w-4xl mx-auto p-6 md:p-10">
-        <div class="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
-            <h1 class="text-2xl md:text-3xl font-extrabold text-dark tracking-tight">Pedidos Recebidos</h1>
-            <span id="contadorPedidos" class="bg-primary text-white text-xs font-bold px-5 py-2 rounded-full shadow-lg">
-                0 pedidos
-            </span>
-        </div>
+    <!-- MAIN -->
+    <main class="max-w-5xl mx-auto px-6 py-10">
 
-        <div id="containerPedidos" class="grid gap-6">
-            <div id="erroBox" class="border border-primary/20 bg-white p-8 rounded-[35px] shadow-sm flex flex-col items-center text-center gap-4">
-                <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
-                    <span class="text-2xl text-primary">🐾</span>
-                </div>
-                <div>
-                    <p class="font-extrabold text-dark text-lg mb-1">Buscando novos pedidos...</p>
-                    <p class="text-sm text-gray-500 max-w-xs">Se a lista não carregar em instantes, verifique a conexão com o banco de dados.</p>
-                </div>
-                <button onclick="location.reload()" class="mt-2 text-xs font-bold text-primary underline">Tentar novamente</button>
+        <!-- HEADER -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-10">
+
+            <div>
+                <h1 class="text-3xl md:text-4xl font-extrabold text-dark">
+                    Pedidos Recebidos
+                </h1>
+
+                <p class="text-gray-500 mt-2">
+                    Acompanhe os pedidos em tempo real.
+                </p>
+            </div>
+
+            <div class="flex items-center gap-4">
+
+                <span id="contador-pedidos"
+                    class="bg-primary text-white px-5 py-3 rounded-2xl font-black shadow-lg">
+                    0 pedidos
+                </span>
+
+                <button onclick="carregarPedidos()"
+                    class="bg-secondary text-white px-5 py-3 rounded-2xl font-bold hover:bg-primary transition">
+                    Atualizar
+                </button>
+
             </div>
         </div>
+
+        <!-- PEDIDOS -->
+        <div id="pedidos-container" class="grid gap-6">
+
+            <!-- LOADING -->
+            <div
+                class="bg-white rounded-3xl shadow-md border border-green-100 p-10 flex flex-col items-center text-center">
+
+                <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-5">
+                    <span class="text-4xl">🐾</span>
+                </div>
+
+                <h2 class="text-2xl font-extrabold text-dark mb-2">
+                    Carregando pedidos...
+                </h2>
+
+                <p class="text-gray-500 max-w-sm">
+                    Aguarde enquanto buscamos os pedidos da clínica.
+                </p>
+
+            </div>
+
+        </div>
+
     </main>
 
     <script>
-        // Lógica para carregar os pedidos da API pode ser adicionada aqui
+
+        // =========================================
+        // CONFIG API
+        // =========================================
+
+        const API_URL = 'https://17-3-aula7-alpha-k2wz.vercel.app/api/pedidos';
+
+
+        // =========================================
+        // CARREGAR PEDIDOS
+        // =========================================
+
+        async function carregarPedidos() {
+
+            const container = document.getElementById('pedidos-container');
+            const contador = document.getElementById('contador-pedidos');
+            const statusConexao = document.getElementById('status-conexao');
+
+            try {
+
+                // STATUS LOADING
+                statusConexao.innerHTML = `
+                    <span class="w-3 h-3 bg-yellow-500 rounded-full animate-pulse"></span>
+                    Atualizando...
+                `;
+
+                statusConexao.className =
+                    'hidden md:flex items-center gap-2 text-sm font-bold text-yellow-600';
+
+                // FETCH
+                const resposta = await fetch(API_URL);
+
+                if (!resposta.ok) {
+                    throw new Error('Erro ao buscar pedidos');
+                }
+
+                const pedidos = await resposta.json();
+
+                // RENDER
+                renderizarPedidos(pedidos);
+
+                // CONTADOR
+                contador.innerText = `${pedidos.length} pedido(s)`;
+
+                // STATUS ONLINE
+                setTimeout(() => {
+
+                    statusConexao.innerHTML = `
+                        <span class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span>
+                        Online
+                    `;
+
+                    statusConexao.className =
+                        'hidden md:flex items-center gap-2 text-sm font-bold text-green-600';
+
+                }, 500);
+
+            } catch (erro) {
+
+                console.error("Erro:", erro);
+
+                container.innerHTML = `
+                    <div class="bg-red-100 border border-red-300 text-red-700 rounded-3xl p-8 text-center shadow">
+                        
+                        <div class="text-5xl mb-4">⚠️</div>
+
+                        <h2 class="text-2xl font-extrabold mb-2">
+                            Falha ao carregar pedidos
+                        </h2>
+
+                        <p class="mb-6">
+                            Verifique a conexão com a API.
+                        </p>
+
+                        <button onclick="carregarPedidos()"
+                            class="bg-red-600 text-white px-5 py-3 rounded-xl font-bold hover:bg-red-700 transition">
+                            Tentar novamente
+                        </button>
+
+                    </div>
+                `;
+
+                // STATUS OFFLINE
+                statusConexao.innerHTML = `
+                    <span class="w-3 h-3 bg-red-500 rounded-full"></span>
+                    Offline
+                `;
+
+                statusConexao.className =
+                    'hidden md:flex items-center gap-2 text-sm font-bold text-red-600';
+            }
+        }
+
+
+        // =========================================
+        // RENDERIZAR PEDIDOS
+        // =========================================
+
+        function renderizarPedidos(pedidos) {
+
+            const container = document.getElementById('pedidos-container');
+
+            container.innerHTML = '';
+
+            // SEM PEDIDOS
+            if (pedidos.length === 0) {
+
+                container.innerHTML = `
+                    <div class="bg-white rounded-3xl shadow-md border border-green-100 p-12 text-center">
+
+                        <div class="text-6xl mb-5">
+                            🐶
+                        </div>
+
+                        <h2 class="text-3xl font-extrabold text-dark mb-2">
+                            Nenhum pedido pendente
+                        </h2>
+
+                        <p class="text-gray-500">
+                            Tudo tranquilo por enquanto.
+                        </p>
+
+                    </div>
+                `;
+
+                return;
+            }
+
+            // LOOP PEDIDOS
+            pedidos.forEach(pedido => {
+
+                let itens = [];
+
+                try {
+
+                    itens = typeof pedido.itens === 'string'
+                        ? JSON.parse(pedido.itens)
+                        : pedido.itens;
+
+                } catch (e) {
+
+                    console.error("Erro ao converter itens:", e);
+
+                }
+
+                if (!Array.isArray(itens)) {
+                    itens = [];
+                }
+
+                // HTML ITENS
+                const htmlItens = itens.map(item => `
+                    
+                    <li class="flex justify-between items-center py-3 border-b border-gray-100">
+
+                        <span class="font-semibold text-dark">
+                            ${item.quantidade || 1}x ${item.nome || 'Produto'}
+                        </span>
+
+                        <span class="text-muted">
+                            R$ ${(item.preco || 0).toFixed(2)}
+                        </span>
+
+                    </li>
+
+                `).join('');
+
+                // DATA
+                let dataFormatada = 'Data indisponível';
+
+                if (pedido.created_at) {
+
+                    const dataObj = new Date(pedido.created_at);
+
+                    dataFormatada =
+                        dataObj.toLocaleTimeString('pt-BR', {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        })
+                        + ' • ' +
+                        dataObj.toLocaleDateString('pt-BR');
+                }
+
+                // CARD
+                const card = `
+
+                    <div class="bg-white rounded-3xl shadow-lg border border-green-100 overflow-hidden hover:shadow-2xl transition duration-300">
+
+                        <!-- TOPO -->
+                        <div class="bg-primary text-white px-6 py-5 flex justify-between items-start">
+
+                            <div>
+
+                                <h2 class="text-2xl font-black">
+                                    Pedido #${pedido.id}
+                                </h2>
+
+                                <p class="text-sm text-green-100 mt-1">
+                                    ${dataFormatada}
+                                </p>
+
+                            </div>
+
+                            <span class="bg-yellow-300 text-yellow-900 text-xs uppercase font-black px-3 py-2 rounded-full">
+                                ${pedido.status || 'Pendente'}
+                            </span>
+
+                        </div>
+
+                        <!-- CONTEÚDO -->
+                        <div class="p-6">
+
+                            <!-- CLIENTE -->
+                            <div class="bg-light rounded-2xl p-4 mb-5 border border-green-100">
+
+                                <p class="mb-2">
+                                    <strong>Cliente:</strong>
+                                    ${pedido.cliente_nome || 'Não informado'}
+                                </p>
+
+                                <p>
+                                    <strong>Endereço:</strong>
+                                    ${pedido.cliente_endereco || 'Não informado'}
+                                </p>
+
+                            </div>
+
+                            <!-- ITENS -->
+                            <div class="mb-6">
+
+                                <h3 class="font-black uppercase text-sm text-dark mb-3 tracking-wide">
+                                    Itens do Pedido
+                                </h3>
+
+                                <ul>
+                                    ${htmlItens}
+                                </ul>
+
+                            </div>
+
+                            <!-- FOOTER -->
+                            <div class="border-t border-gray-100 pt-5 flex justify-between items-center">
+
+                                <div>
+
+                                    <span class="text-xs uppercase font-bold text-muted">
+                                        Total
+                                    </span>
+
+                                    <h4 class="text-3xl font-black text-primary">
+                                        R$ ${(pedido.total || 0).toFixed(2)}
+                                    </h4>
+
+                                </div>
+
+                                <button onclick="concluirPedido(this)"
+                                    class="bg-secondary hover:bg-primary text-white font-bold px-6 py-3 rounded-2xl transition transform hover:scale-105 shadow">
+
+                                    Pronto ✓
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+                container.innerHTML += card;
+            });
+        }
+
+
+        // =========================================
+        // CONCLUIR PEDIDO
+        // =========================================
+
+        function concluirPedido(btn) {
+
+            const card = btn.closest('.bg-white');
+
+            card.classList.add(
+                'opacity-60',
+                'grayscale',
+                'pointer-events-none'
+            );
+
+            btn.innerText = 'Finalizado';
+
+            btn.classList.remove(
+                'bg-secondary',
+                'hover:bg-primary'
+            );
+
+            btn.classList.add(
+                'bg-gray-400'
+            );
+        }
+
+
+        // =========================================
+        // INIT
+        // =========================================
+
+        carregarPedidos();
+
+        setInterval(carregarPedidos, 10000);
+
     </script>
+
 </body>
+
 </html>
