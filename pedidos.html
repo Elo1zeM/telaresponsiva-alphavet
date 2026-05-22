@@ -3,8 +3,13 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Painel de Pedidos - Alpha Vet</title>
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0" />
+
+    <title>
+        Painel de Pedidos - Alpha Vet
+    </title>
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap"
         rel="stylesheet">
@@ -35,16 +40,18 @@
 
     <!-- NAVBAR -->
     <nav class="bg-white shadow-md sticky top-0 z-50 border-b border-green-100">
+
         <div class="max-w-7xl mx-auto px-6 h-24 flex justify-between items-center">
 
-            <!-- LOGO -->
-            <a href="#" class="flex items-center gap-4">
+            <a href="#"
+                class="flex items-center gap-4">
 
-                <img src="./assets/img/logo.png" alt="Alpha Vet"
-                    class="h-20 w-auto object-contain"
-                    onerror="this.src='https://via.placeholder.com/180x80?text=Alpha+Vet'">
+                <img src="./assets/img/logo.png"
+                    alt="Alpha Vet"
+                    class="h-20 w-auto object-contain">
 
                 <div class="flex flex-col">
+
                     <span class="text-primary text-3xl font-extrabold uppercase tracking-tight">
                         Alpha Vet
                     </span>
@@ -52,17 +59,22 @@
                     <span class="text-[11px] text-gray-400 uppercase tracking-[0.25em] font-bold">
                         Clínica Veterinária
                     </span>
+
                 </div>
+
             </a>
 
-            <!-- STATUS -->
             <div id="status-conexao"
                 class="hidden md:flex items-center gap-2 text-sm font-bold text-green-600">
+
                 <span class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span>
+
                 Online
+
             </div>
 
         </div>
+
     </nav>
 
     <!-- MAIN -->
@@ -72,51 +84,40 @@
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-10">
 
             <div>
+
                 <h1 class="text-3xl md:text-4xl font-extrabold text-dark">
                     Pedidos Recebidos
                 </h1>
 
                 <p class="text-gray-500 mt-2">
-                    Acompanhe os pedidos em tempo real.
+                    Acompanhe os pedidos.
                 </p>
+
             </div>
 
             <div class="flex items-center gap-4">
 
                 <span id="contador-pedidos"
                     class="bg-primary text-white px-5 py-3 rounded-2xl font-black shadow-lg">
+
                     0 pedidos
+
                 </span>
 
                 <button onclick="carregarPedidos()"
                     class="bg-secondary text-white px-5 py-3 rounded-2xl font-bold hover:bg-primary transition">
+
                     Atualizar
+
                 </button>
 
             </div>
+
         </div>
 
         <!-- PEDIDOS -->
-        <div id="pedidos-container" class="grid gap-6">
-
-            <!-- LOADING -->
-            <div
-                class="bg-white rounded-3xl shadow-md border border-green-100 p-10 flex flex-col items-center text-center">
-
-                <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-5">
-                    <span class="text-4xl">🐾</span>
-                </div>
-
-                <h2 class="text-2xl font-extrabold text-dark mb-2">
-                    Carregando pedidos...
-                </h2>
-
-                <p class="text-gray-500 max-w-sm">
-                    Aguarde enquanto buscamos os pedidos da clínica.
-                </p>
-
-            </div>
-
+        <div id="pedidos-container"
+            class="grid gap-6">
         </div>
 
     </main>
@@ -124,97 +125,44 @@
     <script>
 
         // =========================================
-        // CONFIG API
-        // =========================================
-
-        const API_URL = 'https://17-3-aula7-alpha-k2wz.vercel.app/api/pedidos';
-
-
-        // =========================================
         // CARREGAR PEDIDOS
         // =========================================
 
         async function carregarPedidos() {
 
-            const container = document.getElementById('pedidos-container');
-            const contador = document.getElementById('contador-pedidos');
-            const statusConexao = document.getElementById('status-conexao');
+            const container =
+                document.getElementById('pedidos-container');
 
-            try {
+            const contador =
+                document.getElementById('contador-pedidos');
 
-                // STATUS LOADING
-                statusConexao.innerHTML = `
-                    <span class="w-3 h-3 bg-yellow-500 rounded-full animate-pulse"></span>
-                    Atualizando...
-                `;
+            const statusConexao =
+                document.getElementById('status-conexao');
 
-                statusConexao.className =
-                    'hidden md:flex items-center gap-2 text-sm font-bold text-yellow-600';
+            // pega pedido salvo
+            const pedidoSalvo =
+                JSON.parse(localStorage.getItem('pedidoAlphaVet'));
 
-                // FETCH
-                const resposta = await fetch(API_URL);
+            // array
+            const pedidos =
+                pedidoSalvo ? [pedidoSalvo] : [];
 
-                if (!resposta.ok) {
-                    throw new Error('Erro ao buscar pedidos');
-                }
+            // renderiza
+            renderizarPedidos(pedidos);
 
-                const pedidos = await resposta.json();
+            // contador
+            contador.innerText =
+                `${pedidos.length} pedido(s)`;
 
-                // RENDER
-                renderizarPedidos(pedidos);
+            // status
+            statusConexao.innerHTML = `
+                <span class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span>
+                Online
+            `;
 
-                // CONTADOR
-                contador.innerText = `${pedidos.length} pedido(s)`;
-
-                // STATUS ONLINE
-                setTimeout(() => {
-
-                    statusConexao.innerHTML = `
-                        <span class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span>
-                        Online
-                    `;
-
-                    statusConexao.className =
-                        'hidden md:flex items-center gap-2 text-sm font-bold text-green-600';
-
-                }, 500);
-
-            } catch (erro) {
-
-                console.error("Erro:", erro);
-
-                container.innerHTML = `
-                    <div class="bg-red-100 border border-red-300 text-red-700 rounded-3xl p-8 text-center shadow">
-                        
-                        <div class="text-5xl mb-4">⚠️</div>
-
-                        <h2 class="text-2xl font-extrabold mb-2">
-                            Falha ao carregar pedidos
-                        </h2>
-
-                        <p class="mb-6">
-                            Verifique a conexão com a API.
-                        </p>
-
-                        <button onclick="carregarPedidos()"
-                            class="bg-red-600 text-white px-5 py-3 rounded-xl font-bold hover:bg-red-700 transition">
-                            Tentar novamente
-                        </button>
-
-                    </div>
-                `;
-
-                // STATUS OFFLINE
-                statusConexao.innerHTML = `
-                    <span class="w-3 h-3 bg-red-500 rounded-full"></span>
-                    Offline
-                `;
-
-                statusConexao.className =
-                    'hidden md:flex items-center gap-2 text-sm font-bold text-red-600';
-            }
+            statusConexao.className =
+                'hidden md:flex items-center gap-2 text-sm font-bold text-green-600';
         }
-
 
         // =========================================
         // RENDERIZAR PEDIDOS
@@ -222,14 +170,16 @@
 
         function renderizarPedidos(pedidos) {
 
-            const container = document.getElementById('pedidos-container');
+            const container =
+                document.getElementById('pedidos-container');
 
             container.innerHTML = '';
 
-            // SEM PEDIDOS
+            // sem pedidos
             if (pedidos.length === 0) {
 
                 container.innerHTML = `
+
                     <div class="bg-white rounded-3xl shadow-md border border-green-100 p-12 text-center">
 
                         <div class="text-6xl mb-5">
@@ -237,11 +187,11 @@
                         </div>
 
                         <h2 class="text-3xl font-extrabold text-dark mb-2">
-                            Nenhum pedido pendente
+                            Nenhum pedido encontrado
                         </h2>
 
                         <p class="text-gray-500">
-                            Tudo tranquilo por enquanto.
+                            Ainda não há pedidos salvos.
                         </p>
 
                     </div>
@@ -250,61 +200,30 @@
                 return;
             }
 
-            // LOOP PEDIDOS
-            pedidos.forEach(pedido => {
+            // loop pedidos
+            pedidos.forEach((pedido, index) => {
 
-                let itens = [];
+                const itens =
+                    pedido.itens || [];
 
-                try {
-
-                    itens = typeof pedido.itens === 'string'
-                        ? JSON.parse(pedido.itens)
-                        : pedido.itens;
-
-                } catch (e) {
-
-                    console.error("Erro ao converter itens:", e);
-
-                }
-
-                if (!Array.isArray(itens)) {
-                    itens = [];
-                }
-
-                // HTML ITENS
+                // html itens
                 const htmlItens = itens.map(item => `
-                    
+
                     <li class="flex justify-between items-center py-3 border-b border-gray-100">
 
                         <span class="font-semibold text-dark">
-                            ${item.quantidade || 1}x ${item.nome || 'Produto'}
+                            ${item.quantidade}x ${item.nome}
                         </span>
 
                         <span class="text-muted">
-                            R$ ${(item.preco || 0).toFixed(2)}
+                            R$ ${item.preco.toFixed(2).replace('.', ',')}
                         </span>
 
                     </li>
 
                 `).join('');
 
-                // DATA
-                let dataFormatada = 'Data indisponível';
-
-                if (pedido.created_at) {
-
-                    const dataObj = new Date(pedido.created_at);
-
-                    dataFormatada =
-                        dataObj.toLocaleTimeString('pt-BR', {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        })
-                        + ' • ' +
-                        dataObj.toLocaleDateString('pt-BR');
-                }
-
-                // CARD
+                // card
                 const card = `
 
                     <div class="bg-white rounded-3xl shadow-lg border border-green-100 overflow-hidden hover:shadow-2xl transition duration-300">
@@ -315,35 +234,39 @@
                             <div>
 
                                 <h2 class="text-2xl font-black">
-                                    Pedido #${pedido.id}
+                                    Pedido #${index + 1}
                                 </h2>
-
-                                <p class="text-sm text-green-100 mt-1">
-                                    ${dataFormatada}
-                                </p>
 
                             </div>
 
                             <span class="bg-yellow-300 text-yellow-900 text-xs uppercase font-black px-3 py-2 rounded-full">
-                                ${pedido.status || 'Pendente'}
+
+                                Pendente
+
                             </span>
 
                         </div>
 
-                        <!-- CONTEÚDO -->
+                        <!-- CONTEUDO -->
                         <div class="p-6">
 
                             <!-- CLIENTE -->
                             <div class="bg-light rounded-2xl p-4 mb-5 border border-green-100">
 
                                 <p class="mb-2">
+
                                     <strong>Cliente:</strong>
-                                    ${pedido.cliente_nome || 'Não informado'}
+
+                                    ${pedido.cliente || 'Não informado'}
+
                                 </p>
 
                                 <p>
+
                                     <strong>Endereço:</strong>
-                                    ${pedido.cliente_endereco || 'Não informado'}
+
+                                    ${pedido.endereco || 'Não informado'}
+
                                 </p>
 
                             </div>
@@ -352,11 +275,15 @@
                             <div class="mb-6">
 
                                 <h3 class="font-black uppercase text-sm text-dark mb-3 tracking-wide">
+
                                     Itens do Pedido
+
                                 </h3>
 
                                 <ul>
+
                                     ${htmlItens}
+
                                 </ul>
 
                             </div>
@@ -367,11 +294,15 @@
                                 <div>
 
                                     <span class="text-xs uppercase font-bold text-muted">
+
                                         Total
+
                                     </span>
 
                                     <h4 class="text-3xl font-black text-primary">
-                                        R$ ${(pedido.total || 0).toFixed(2)}
+
+                                        ${pedido.total || 'R$ 0,00'}
+
                                     </h4>
 
                                 </div>
@@ -395,14 +326,14 @@
             });
         }
 
-
         // =========================================
         // CONCLUIR PEDIDO
         // =========================================
 
         function concluirPedido(btn) {
 
-            const card = btn.closest('.bg-white');
+            const card =
+                btn.closest('.bg-white');
 
             card.classList.add(
                 'opacity-60',
@@ -410,7 +341,8 @@
                 'pointer-events-none'
             );
 
-            btn.innerText = 'Finalizado';
+            btn.innerText =
+                'Finalizado';
 
             btn.classList.remove(
                 'bg-secondary',
@@ -422,14 +354,11 @@
             );
         }
 
-
         // =========================================
         // INIT
         // =========================================
 
         carregarPedidos();
-
-        setInterval(carregarPedidos, 10000);
 
     </script>
 
