@@ -315,7 +315,7 @@
                 // Força a conversão para número decimal puro aqui para não misturar escopo
                 const precoFixoItem = parseFloat(p.preco) || 0;
                 const nomeFixoItem = p.nome;
-                const idFixoItem = String(p.id);
+                const idFixoItem = String(p.id !== undefined && p.id !== null && p.id !== '' ? p.id : p.nome);
                 const descFixoItem = p.descricao || '';
 
                 const card = document.createElement('div');
@@ -398,7 +398,7 @@ function renderizarListaCarrinho() {
         divItem.className = "flex justify-between items-center bg-gray-50 p-4 rounded-2xl";
 
         // Calcula o preço total deste item específico (Preço unitário x Quantidade dele)
-        const precoTotalDoItem = item.preco * item.whitespace_modifier ? item.preco * item.quantidade : item.preco * item.whitespace_modifier ? item.preco * item.quantidade : item.preco * item.quantidade;
+        const precoTotalDoItem = item.preco * item.quantidade;
 
         divItem.innerHTML = `
             <div>
